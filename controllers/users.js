@@ -4,12 +4,6 @@ const NotFoundError = require('../error/not-found-err');
 const IncorrectError = require('../error/incorrect-error');
 const ConflictingRequest = require('../error/conflicting-request');
 
-// module.exports.getUsers = (req, res, next) => {
-//   User.find({})
-//     .then((users) => res.send({ data: users }))
-//     .catch(() => next(new IncorrectError()));
-// };
-
 // создаёт пользователя с переданными в теле
 // email, password и name
 module.exports.createUser = (req, res, next) => {
@@ -55,12 +49,14 @@ module.exports.login = (req, res, next) => {
 
 // возвращает информацию о пользователе (email и имя)
 module.exports.getUser = (req, res, next) => {
-  console.log(req.user);
   const userId = req.user._id;
   User.findById(userId)
     .then((user) => {
       if (user) {
-        res.json(user);
+        res.json({
+          name: user.name,
+          email: user.email,
+        });
       } else {
         throw new NotFoundError('Нет пользователя с таким id');
       }
